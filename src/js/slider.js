@@ -62,13 +62,14 @@ function sliderLoader() {
     }
 
     function clickOnSliderDot() {
-        const slideActive = document.querySelector('.slider__item--active');
         const sliderDotContainer = document.querySelector('.slider__dots');
-        const sliderDotActive = document.querySelector('.slider__dot--active');
         
         for (let i = 0; i < sliderDotContainer.children.length; i++) {(
             function (num) {
                 sliderDotContainer.children[i].onclick = function () {
+                    const slideActive = document.querySelector('.slider__item--active');
+                    const sliderDotActive = document.querySelector('.slider__dot--active');
+
                     slideActive.classList.remove('slider__item--active');
                     sliderDotActive.classList.remove('slider__dot--active');
 
