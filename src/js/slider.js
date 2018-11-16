@@ -1,20 +1,20 @@
 'use strict';
 
 function sliderLoader() {
-    
-    const slider = document.querySelector('.slider');
-    const sliderWrapper = document.querySelector('.slider__wrapper');
-    const sliderItem = document.querySelectorAll('.slider__item');
+
+    const sliderWrapper = document.querySelector('.js-slider-wrapper');
     
     function changingSlides() {
         const slideActive = document.querySelector('.slider__item--active');
-        const sliderDotContainer = document.querySelector('.slider__dots');
+        const sliderDotContainer = document.querySelector('.js-slider-dots');
         const sliderDotActive = document.querySelector('.slider__dot--active');
+        const nextSlide = slideActive.nextElementSibling;
+        const nextDot = sliderDotActive.nextElementSibling;
         slideActive.classList.remove('slider__item--active');
         sliderDotActive.classList.remove('slider__dot--active');
-        if (slideActive.nextElementSibling !=null) {
-            slideActive.nextElementSibling.classList.add('slider__item--active');
-            sliderDotActive.nextElementSibling.classList.add('slider__dot--active')
+        if (nextSlide) {
+            nextSlide.classList.add('slider__item--active');
+            nextDot.classList.add('slider__dot--active')
         }
         else {
             sliderWrapper.children[0].classList.add('slider__item--active');
@@ -23,19 +23,21 @@ function sliderLoader() {
     }
 
     function changingSliderMobile() {
-        const buttonPrev = document.querySelector('.prev');
-        const buttonNext = document.querySelector('.next');
+        const buttonPrev = document.querySelector('.js-btn-prev');
+        const buttonNext = document.querySelector('.js-btn-next');
 
         buttonPrev.onclick = function () {
             const slideActive = document.querySelector('.slider__item--active');
-            const sliderDotContainer = document.querySelector('.slider__dots');
+            const sliderDotContainer = document.querySelector('.js-slider-dots');
             const sliderDotActive = document.querySelector('.slider__dot--active');
+            const prevSlide = slideActive.previousElementSibling;
+            const prevDot = sliderDotActive.previousElementSibling;
 
             slideActive.classList.remove('slider__item--active');
             sliderDotActive.classList.remove('slider__dot--active');
-            if (slideActive.previousElementSibling !=null) {
-                slideActive.previousElementSibling.classList.add('slider__item--active');
-                sliderDotActive.previousElementSibling.classList.add('slider__dot--active')
+            if (prevSlide) {
+                prevSlide.classList.add('slider__item--active');
+                prevDot.classList.add('slider__dot--active')
             }
             else {
                 sliderWrapper.lastElementChild.classList.add('slider__item--active');
@@ -44,25 +46,12 @@ function sliderLoader() {
         };
 
         buttonNext.onclick = function () {
-            const slideActive = document.querySelector('.slider__item--active');
-            const sliderDotContainer = document.querySelector('.slider__dots');
-            const sliderDotActive = document.querySelector('.slider__dot--active');
-
-            slideActive.classList.remove('slider__item--active');
-            sliderDotActive.classList.remove('slider__dot--active');
-            if (slideActive.nextElementSibling !=null) {
-                slideActive.nextElementSibling.classList.add('slider__item--active');
-                sliderDotActive.nextElementSibling.classList.add('slider__dot--active')
-            }
-            else {
-                sliderWrapper.children[0].classList.add('slider__item--active');
-                sliderDotContainer.children[0].classList.add('slider__dot--active')
-            }
+            changingSlides()
         }
     }
 
     function clickOnSliderDot() {
-        const sliderDotContainer = document.querySelector('.slider__dots');
+        const sliderDotContainer = document.querySelector('.js-slider-dots');
         
         for (let i = 0; i < sliderDotContainer.children.length; i++) {(
             function (num) {
