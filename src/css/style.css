@@ -1,4 +1,7 @@
 .slider {
+    height: 600px;
+}
+.slider__wrapper {
     display: flex;
     flex-direction: column;
     position: relative;
@@ -67,6 +70,7 @@
     height: 20px;
     color: black;
     background-color: white;
+    border: 1px solid black;
     cursor: pointer;
     margin-right: 10px;
     z-index: 100;

@@ -3,7 +3,8 @@
 function sliderLoader() {
 
     const sliderWrapper = document.querySelector('.js-slider-wrapper');
-    
+    let currentIndex = 0;
+
     function changingSlides() {
         const slideActive = document.querySelector('.slider__item--active');
         const sliderDotContainer = document.querySelector('.js-slider-dots');
@@ -17,10 +18,10 @@ function sliderLoader() {
             nextDot.classList.add('slider__dot--active')
         }
         else {
-            sliderWrapper.children[0].classList.add('slider__item--active');
-            sliderDotContainer.children[0].classList.add('slider__dot--active')
+            sliderWrapper.children[currentIndex].classList.add('slider__item--active');
+            sliderDotContainer.children[currentIndex].classList.add('slider__dot--active')
         }
-    }
+    };
 
     function changingSliderMobile() {
         const buttonPrev = document.querySelector('.js-btn-prev');
