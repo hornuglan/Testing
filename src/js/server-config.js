@@ -3,18 +3,10 @@
 const getObjects = () => {
     const configPreloader = document.querySelector('.config__preloader');
     const configTable = document.querySelector('.config__table');
-    let configTemplate =
-        `<div class="config__row">
-        <div class="config__cpu"></div>
-        <div class="config__hdd"></div>
-        <div class="config__ram"></div>
-        <div class="config__price"></div>
-        </div>`;
-    let templateHTML = document.createElement('div');
+
     const xhrRequest = new XMLHttpRequest();
     const url = 'https://api.jsonbin.io/b/5b683d097b212953678c03dd';
-    templateHTML.innerHTML = configTemplate;
-    templateHTML = templateHTML.firstElementChild;
+
     xhrRequest.open('GET', url, true);
     xhrRequest.send();
 
@@ -34,41 +26,21 @@ const getObjects = () => {
     };
 
     const configRendering = (data) => {
-        const block = document.createDocumentFragment();
-        data.forEach((component) => {
-            let elem = templateHTML.cloneNode(true);
-            let mainfraime = elem.querySelector('.config__cpu');
-            let hdd = elem.querySelector('.config__hdd');
-            let ram = elem.querySelector('.config__ram');
-            let price = elem.querySelector('.config__price');
-            mainfraime.textContent = component.cpu;
-            hdd.textContent = component.hdd;
-            ram.textContent = component.ram;
-            price.textContent = component.price;
-            block.appendChild(elem);
+        let block = '';
+        data.forEach((item) => {
+            const configTemplate = `<div class="config__row">
+                <div class="config__cpu">${item.cpu}</div>
+                <div class="config__hdd">${item.hdd}</div>
+                <div class="config__ram">${item.ram}</div>
+                <div class="config__price">${item.price}</div>
+            </div>`;
+            block += configTemplate;
         });
 
-        configTable.appendChild(block);
+        configTable.append(block);
     }
-}
+};
 
 getObjects();
 
 
-
-
-/*
-let template = `<div>
-    <div>${'ramPrice'}</div>
-    <div>${'hddPrice'}</div>
-</div>`;
-
-let response = Json.parse(response);
-
-let element = template({
-    ramPrice: response.ram.price,
-    hddPrice: response.hdd.price
-});
-
-container.append(element);
-*/
