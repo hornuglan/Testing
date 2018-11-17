@@ -3,14 +3,7 @@
 function getObjects() {
     const configPreloader = document.querySelector('.config__preloader');
     const configTable = document.querySelector('.config__table');
-    let configTemplate =
-        '<div class="config__row">' +
-            '<div class="config__cpu">' + '</div>' +
-            '<div class="config__hdd">' + '</div>' +
-            '<div class="config__ram">' + '</div>' +
-            '<div class="config__price">' + '</div>' +
-        '</div>';
-
+    let configTemplate = '<div class="config__row">' + '<div class="config__cpu">' + '</div>' + '<div class="config__hdd">' + '</div>' + '<div class="config__ram">' + '</div>' + '<div class="config__price">' + '</div>' + '</div>';
     let templateHTML = document.createElement('div');
     const xhrRequest = new XMLHttpRequest();
     const url = 'https://api.jsonbin.io/b/5b683d097b212953678c03dd';
@@ -25,7 +18,7 @@ function getObjects() {
         if (xhrRequest.status === 200) {
             const response = xhrRequest.responseText;
             const jsonParse = JSON.parse(response);
-            configRendering();
+            configRendering(jsonParse);
         } else {
             const errorMessage = document.createElement('div');
             errorMessage.classList.add('config__error-message');
