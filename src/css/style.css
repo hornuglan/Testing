@@ -95,3 +95,7 @@
 .config__price {
     color: black;
 }
+
+.config__preloader--invisible {
+    display: none;
+}
