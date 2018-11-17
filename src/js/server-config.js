@@ -1,9 +1,15 @@
 'use strict';
 
-function getObjects() {
+const getObjects = () => {
     const configPreloader = document.querySelector('.config__preloader');
     const configTable = document.querySelector('.config__table');
-    let configTemplate = '<div class="config__row">' + '<div class="config__cpu">' + '</div>' + '<div class="config__hdd">' + '</div>' + '<div class="config__ram">' + '</div>' + '<div class="config__price">' + '</div>' + '</div>';
+    let configTemplate =
+        `<div class="config__row">
+        <div class="config__cpu"></div>
+        <div class="config__hdd"></div>
+        <div class="config__ram"></div>
+        <div class="config__price"></div>
+        </div>`;
     let templateHTML = document.createElement('div');
     const xhrRequest = new XMLHttpRequest();
     const url = 'https://api.jsonbin.io/b/5b683d097b212953678c03dd';
@@ -12,7 +18,7 @@ function getObjects() {
     xhrRequest.open('GET', url, true);
     xhrRequest.send();
 
-    xhrRequest.onreadystatechange = function () {
+    xhrRequest.onreadystatechange = () => {
         if (xhrRequest.readyState !== 4) return;
         configPreloader.classList.add('config__preloader--invisible');
         if (xhrRequest.status === 200) {
@@ -25,11 +31,11 @@ function getObjects() {
             errorMessage.textContent = 'Ошибка соединения';
             configTable.appendChild(errorMessage);
         }
-    }
+    };
 
-    function configRendering(data) {
+    const configRendering = (data) => {
         const block = document.createDocumentFragment();
-        data.forEach(function (component) {
+        data.forEach((component) => {
             let elem = templateHTML.cloneNode(true);
             let mainfraime = elem.querySelector('.config__cpu');
             let hdd = elem.querySelector('.config__hdd');
