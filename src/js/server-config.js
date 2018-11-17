@@ -28,16 +28,14 @@ const getObjects = () => {
     const configRendering = (data) => {
         let block = '';
         data.forEach((item) => {
-            const configTemplate = `<div class="config__row">
+            block += `<div class="config__row">
                 <div class="config__cpu">${item.cpu}</div>
                 <div class="config__hdd">${item.hdd}</div>
                 <div class="config__ram">${item.ram}</div>
                 <div class="config__price">${item.price}</div>
             </div>`;
-            block += configTemplate;
         });
-
-        configTable.append(block);
+        configTable.innerHTML = block;
     }
 };
 
