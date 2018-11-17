@@ -75,3 +75,23 @@
     margin-right: 10px;
     z-index: 100;
 }
+
+.config__table {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+}
+
+.config__row {
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid black;
+    border-radius: 20%;
+}
+
+.config__cpu,
+.config__hdd,
+.config__ram,
+.config__price {
+    color: black;
+}
