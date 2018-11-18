@@ -66,32 +66,35 @@ function sliderLoader() {
 
     // entry point, start slide show
     let slideInterval = setInterval(setNextSlide, SLIDE_INTERVAL_MS);
+
+    const swipeSlider = (event) => {
+        clearInterval();
+        let startCoordinate = event.changedTouches[0].clientX;
+
+        const swipeFinish = (e) => {
+            const finCoordinate = e.changedTouches[0].clientX;
+            swipeChangingSlides(finCoordinate);
+            this.removeEventListener('touchend', swipeFinish)
+        };
+
+        const swipeChangingSlides = (finCoordinate) => {
+            const swipeLength = Math.abs(startCoordinate - finCoordinate);
+            const swipeLengthMin = 50;
+
+            if (swipeLength > swipeLengthMin) {
+                if (startCoordinate < finCoordinate) {
+                    setPrevIndex();
+                    updateSlider();
+                } else if (startCoordinate > finCoordinate) {
+                    setNextSlide();
+                }
+            }
+        };
+        this.addEventListener('touchend', swipeFinish);
+    };
+    swipeSlider();
+
 }
 
 document.addEventListener('DOMContentLoaded', sliderLoader);
 
-const swipeSlider = (event) => {
-    clearInterval();
-    let startCoordinate = event.changedTouches[0].clientX;
-
-    const swipeFinish = (e) => {
-        const finCoordinate = e.changedTouches[0].clientX;
-        swipeChangingSlides(finCoordinate);
-        this.removeEventListener('touchend', swipeFinish)
-    };
-
-    const swipeChangingSlides = (finCoordinate) => {
-        const swipeLength = Math.abs(startCoordinate - finCoordinate);
-        const swipeLengthMin = 50;
-
-        if (swipeLength > swipeLengthMin) {
-            if (startCoordinate < finCoordinate) {
-                setNextSlide(true);
-            } else if (startCoordinate > finCoordinate) {
-                setNextSlide();
-            }
-        }
-    }
-
-    this.addEventListener('touchend', swipeFinish());
-};
