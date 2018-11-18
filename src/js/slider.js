@@ -1,81 +1,97 @@
 'use strict';
 
+const SLIDE_INTERVAL_MS = 5000;
+
 function sliderLoader() {
-
+    // work with DOM
+    // wrappers
     const sliderWrapper = document.querySelector('.js-slider-wrapper');
-    let currentIndex = 0;
+    const sliderDotContainer = document.querySelector('.js-slider-dots');
+    // buttons
+    const buttonPrev = document.querySelector('.js-btn-prev');
+    const buttonNext = document.querySelector('.js-btn-next');
 
-    function changingSlides() {
-        const slideActive = document.querySelector('.slider__item--active');
-        const sliderDotContainer = document.querySelector('.js-slider-dots');
-        const sliderDotActive = document.querySelector('.slider__dot--active');
-        const nextSlide = slideActive.nextElementSibling;
-        const nextDot = sliderDotActive.nextElementSibling;
-        slideActive.classList.remove('slider__item--active');
-        sliderDotActive.classList.remove('slider__dot--active');
-        if (nextSlide) {
-            nextSlide.classList.add('slider__item--active');
-            nextDot.classList.add('slider__dot--active')
+    // work with index
+    let currentIndex = 0;
+    const setPrevIndex = () => {
+        if (currentIndex - 1 < 0) {
+            currentIndex = sliderDotContainer.children.length - 1;
         }
-        else {
-            sliderWrapper.children[currentIndex].classList.add('slider__item--active');
-            sliderDotContainer.children[currentIndex].classList.add('slider__dot--active')
+        currentIndex -= 1;
+    };
+    const setNextIndex = () => {
+        if (currentIndex + 1 > sliderDotContainer.children.length - 1) {
+            currentIndex = 0;
         }
+        currentIndex += 1;
     };
 
-    function changingSliderMobile() {
-        const buttonPrev = document.querySelector('.js-btn-prev');
-        const buttonNext = document.querySelector('.js-btn-next');
+    const updateSlider = () => {
+        // stop slide show
+        clearInterval(slideInterval);
 
-        buttonPrev.onclick = function () {
-            const slideActive = document.querySelector('.slider__item--active');
-            const sliderDotContainer = document.querySelector('.js-slider-dots');
-            const sliderDotActive = document.querySelector('.slider__dot--active');
-            const prevSlide = slideActive.previousElementSibling;
-            const prevDot = sliderDotActive.previousElementSibling;
+        // clear current active slide and dot
+        const slideActive = document.querySelector('.slider__item--active');
+        const sliderDotActive = document.querySelector('.slider__dot--active');
+        slideActive.classList.remove('slider__item--active');
+        sliderDotActive.classList.remove('slider__dot--active');
 
-            slideActive.classList.remove('slider__item--active');
-            sliderDotActive.classList.remove('slider__dot--active');
-            if (prevSlide) {
-                prevSlide.classList.add('slider__item--active');
-                prevDot.classList.add('slider__dot--active')
-            }
-            else {
-                sliderWrapper.lastElementChild.classList.add('slider__item--active');
-                sliderDotContainer.lastElementChild.classList.add('slider__dot--active')
-            }
-        };
+        // set current active slide and dot
+        sliderWrapper.children[currentIndex].classList.add('slider__item--active');
+        sliderDotContainer.children[currentIndex].classList.add('slider__dot--active');
 
-        buttonNext.onclick = function () {
-            changingSlides()
+        // continue slide show
+        slideInterval = setInterval(setNextSlide, SLIDE_INTERVAL_MS);
+    };
+
+    const setNextSlide = () => {
+        setNextIndex();
+        updateSlider();
+    };
+
+    // set event handlers
+    buttonPrev.onclick  = () => {
+        setPrevIndex();
+        updateSlider();
+    };
+
+    buttonNext.onclick = setNextSlide;
+
+    for (let i = 0; i < sliderDotContainer.children.length; i++) {
+        sliderDotContainer.children[i].onclick = () => {
+            currentIndex = i;
+            updateSlider();
         }
     }
 
-    function clickOnSliderDot() {
-        const sliderDotContainer = document.querySelector('.js-slider-dots');
-        
-        for (let i = 0; i < sliderDotContainer.children.length; i++) {(
-            function (num) {
-                sliderDotContainer.children[i].onclick = function () {
-                    const slideActive = document.querySelector('.slider__item--active');
-                    const sliderDotActive = document.querySelector('.slider__dot--active');
-
-                    slideActive.classList.remove('slider__item--active');
-                    sliderDotActive.classList.remove('slider__dot--active');
-
-                    sliderWrapper.children[num].classList.add('slider__item--active');
-                    sliderDotContainer.children[num].classList.add('slider__dot--active')
-                }
-            }
-        )(i);
-        }
-    }
-
-    setInterval(changingSlides, 5000);
-    clickOnSliderDot();
-    changingSliderMobile();
+    // entry point, start slide show
+    let slideInterval = setInterval(setNextSlide, SLIDE_INTERVAL_MS);
 }
 
 document.addEventListener('DOMContentLoaded', sliderLoader);
 
+const swipeSlider = (event) => {
+    clearInterval();
+    let startCoordinate = event.changedTouches[0].clientX;
 
+    const swipeFinish = (e) => {
+        const finCoordinate = e.changedTouches[0].clientX;
+        swipeChangingSlides(finCoordinate);
+        this.removeEventListener('touchend', swipeFinish)
+    };
+
+    const swipeChangingSlides = (finCoordinate) => {
+        const swipeLength = Math.abs(startCoordinate - finCoordinate);
+        const swipeLengthMin = 50;
+
+        if (swipeLength > swipeLengthMin) {
+            if (startCoordinate < finCoordinate) {
+                setNextSlide(true);
+            } else if (startCoordinate > finCoordinate) {
+                setNextSlide();
+            }
+        }
+    }
+
+    this.addEventListener('touchend', swipeFinish());
+};
