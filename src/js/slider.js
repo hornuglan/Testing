@@ -49,12 +49,13 @@ function sliderLoader() {
         updateSlider();
     };
 
-    // set event handlers
-    buttonPrev.onclick  = () => {
+    const setPrevSlide = () => {
         setPrevIndex();
         updateSlider();
     };
 
+    // set event handlers
+    buttonPrev.onclick  = setPrevSlide;
     buttonNext.onclick = setNextSlide;
 
     for (let i = 0; i < sliderDotContainer.children.length; i++) {
@@ -68,29 +69,25 @@ function sliderLoader() {
     let slideInterval = setInterval(setNextSlide, SLIDE_INTERVAL_MS);
 
     const swipeSlider = (event) => {
-        clearInterval();
-        let startCoordinate = event.changedTouches[0].clientX;
+        clearInterval(slideInterval);
 
-        const swipeFinish = (e) => {
-            const finCoordinate = e.changedTouches[0].clientX;
-            swipeChangingSlides(finCoordinate);
-            this.removeEventListener('touchend', swipeFinish)
-        };
+        const swipeEnd = (e) => {
+            const MIN_SWIPE_PX = 100;
 
-        const swipeChangingSlides = (finCoordinate) => {
-            const swipeLength = Math.abs(startCoordinate - finCoordinate);
-            const swipeLengthMin = 50;
+            const xStart = event.changedTouches[0].clientX;
+            const xEnd = e.changedTouches[0].clientX;
+            const swipeLength = Math.abs(xStart - xEnd);
 
-            if (swipeLength > swipeLengthMin) {
-                if (startCoordinate < finCoordinate) {
-                    setPrevIndex();
-                    updateSlider();
-                } else if (startCoordinate > finCoordinate) {
-                    setNextSlide();
-                }
+            if (swipeLength < MIN_SWIPE_PX) return;
+
+            if (xStart < xEnd) {
+                setPrevSlide();
+            } else {
+                setNextSlide();
             }
+            this.removeEventListener('touchend', swipeEnd)
         };
-        this.addEventListener('touchend', swipeFinish);
+        this.addEventListener('touchend', swipeEnd);
     };
     sliderWrapper.addEventListener('touchstart', swipeSlider);
 }
