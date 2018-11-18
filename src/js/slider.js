@@ -92,8 +92,7 @@ function sliderLoader() {
         };
         this.addEventListener('touchend', swipeFinish);
     };
-    swipeSlider();
-
+    sliderWrapper.addEventListener('touchstart', swipeSlider);
 }
 
 document.addEventListener('DOMContentLoaded', sliderLoader);
