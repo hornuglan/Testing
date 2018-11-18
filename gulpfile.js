@@ -1,4 +1,5 @@
-const gulpfile = require('gulp');
+const gulp = require('gulp');
+const serve = require('gulp-serve');
 const stylus = require('gulp-stylus');
 const pug = require('gulp-pug');
 const plumberNotifier = require('gulp-plumber-notifier');
@@ -9,31 +10,25 @@ const mqpacker = require('css-mqpacker');
 const cleanss = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 const browserSync = require('browser-sync').create();
-/*const merge = require('merge-stream');
-const imagemin = require('gulp-imagemin');
 const run = require('run-sequence');
 const del = require('del');
-const concat = require('gulp-concat');
-const svgstore = require('gulp-svgstore');
-const svgmin = require('gulp-svgmin');
-const path = require('path');*/
 
-gulpfile.task('html', function() {
-    return gulpfile.src('src/*.html')
+gulp.task('html', function() {
+    return gulp.src('src/*.html')
         .pipe(plumberNotifier())
-        .pipe(gulpfile.dest('src/'))
+        .pipe(gulp.dest('src/'))
         .pipe(browserSync.stream());
 });
 
-gulpfile.task('pug', function() {
-    return gulpfile.src('src/*.pug')
+gulp.task('pug', function() {
+    return gulp.src('src/*.pug')
         .pipe(pug())
-        .pipe(gulpfile.dest('src/'))
+        .pipe(gulp.dest('src/'))
         .pipe(browserSync.stream());
 });
 
-gulpfile.task('stylus', function () {
-    return gulpfile.src('src/stylus/style.styl')
+gulp.task('stylus', function () {
+    return gulp.src('src/stylus/style.styl')
         .pipe(plumberNotifier())
         .pipe(stylus())
         .pipe(postcss([
@@ -46,9 +41,40 @@ gulpfile.task('stylus', function () {
             })
         ]))
         .pipe(rename('style.css'))
-        .pipe(gulpfile.dest('src/css'))
+        .pipe(gulp.dest('src/css'))
         .pipe(cleanss())
         .pipe(rename('style.min.css'))
-        .pipe(gulpfile.dest('src/css'))
+        .pipe(gulp.dest('src/css'))
         .pipe(browserSync.stream());
+});
+
+gulp.task('copy', function() {
+    return gulp.src([
+        "src/img/**"
+    ], {
+        base: 'src'
+    })
+        .pipe(gulp.dest("build"));
+});
+
+gulp.task('del', function() {
+    return del('build');
+})
+
+gulp.task('build', function(done){
+    run(
+        'del',
+        'copy',
+        'stylus',
+        'pug',
+        done
+    );
+});
+
+gulp.task('serve', ['build'], function(){
+    browserSync.init({
+        server: "build",
+    });
+    gulp.watch('src/styl/**/*.styl', ['stylus']);
+    gulp.watch('src/**/*.pug', ['pug']);
 });
