@@ -14,9 +14,9 @@ const run = require('run-sequence');
 const del = require('del');
 
 gulp.task('html', function() {
-    return gulp.src('src/*.html')
+    return gulp.src('*.html')
         .pipe(plumberNotifier())
-        .pipe(gulp.dest('src/'))
+        .pipe(gulp.dest(''))
         .pipe(browserSync.stream());
 });
 
